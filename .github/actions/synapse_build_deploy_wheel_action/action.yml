@@ -9,7 +9,7 @@ inputs:
     required: true 
   SPARK_POOL_NAME:
     description: Synapse Spark Pool to deploy the wheel to
-    required: false
+    required: true
   WHEEL_FILE_NAME:
     description: Wheel file name to build/deploy to Synapse 
     required: false
@@ -36,5 +36,5 @@ runs:
 
     
     - name: Run Python Script
-      run: python ${{ github.action_path }}\SynapseBuildWheelScript.py
+      run: python ${{ github.action_path }}/SynapseBuildWheelScript.py
       shell: pwsh
