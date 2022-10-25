@@ -17,7 +17,7 @@ on:
 
 jobs:
   deploy-to-env1:
-    if: ${{ github.event.inputs.deploy-to-env1 == 'true ' }}
+    if: ${{ github.event.inputs.deploy-to-env1 == 'true' }}
     runs-on: windows-latest
     environment: env1 # or whatever env I have in GitHub Secrets
     steps:  
