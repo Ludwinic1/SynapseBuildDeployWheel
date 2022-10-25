@@ -1,6 +1,6 @@
 import subprocess
 
-print('hello')
+# print('hello')
 
 
 def run(cmd):
@@ -12,14 +12,19 @@ def run(cmd):
 
 # print(hello_info.stdout.decode())
 
-new_command = 'Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
 
-new_command_test = run(new_command)
+new_command2 = 'Import-Module Az.Synapse; Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
+
+
+
+# new_command = 'Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
+
+new_command_test = run(new_command2)
 
 print(new_command_test.stderr.decode())
-# print(new_command_test.stdout.decode())
+print(new_command_test.stdout.decode())
 
-# print(new_command_test.returncode)
+print(new_command_test.returncode)
 
 # print(new_command_test.stdout.decode())
 
