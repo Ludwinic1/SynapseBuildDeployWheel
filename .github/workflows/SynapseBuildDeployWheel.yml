@@ -24,7 +24,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: synapse-build-deploy-wheel
-        uses: ./.github/actions/synapse_build-deploy-wheel_action
+        uses: ./.github/actions/synapse_build_deploy_wheel_action
         with:
           CREDS: ${{ secrets.AZURE_CREDENTIALS }}
           TARGET_WS: ${{ secrets.TARGET_WS }}
