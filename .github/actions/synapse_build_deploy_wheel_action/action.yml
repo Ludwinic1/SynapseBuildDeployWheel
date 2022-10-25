@@ -34,7 +34,15 @@ runs:
         python setup.py bdist_wheel
       shell: pwsh 
 
-    
+    - name: Run Python Script from Powershell 
+      uses: azure/powershell@v1 
+      with:
+        azPSVersion: latest 
+        inlineScript: |
+          Import-Module Az.Synapse
+          python ${{ github.action_path }}/SynapseBuildWheelScript.py
+
+
     - name: Run Python Script
       run: python ${{ github.action_path }}/SynapseBuildWheelScript.py
       shell: pwsh
