@@ -15,9 +15,11 @@ def run(cmd):
 new_command = 'Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
 
 new_command_test = run(new_command)
-print(new_command_test.stdout.decode())
 
-print(new_command_test.returncode)
+print(new_command_test.stderr.decode())
+# print(new_command_test.stdout.decode())
+
+# print(new_command_test.returncode)
 
 # print(new_command_test.stdout.decode())
 
