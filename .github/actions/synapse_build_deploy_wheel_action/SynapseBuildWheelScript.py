@@ -3,6 +3,23 @@ import subprocess
 print('hello')
 
 
+def run(cmd):
+    completed = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
+    return completed 
+
+# hello_command = "WRITE-HOST 'Hello World!'"
+# hello_info = run(hello_command)
+
+# print(hello_info.stdout.decode())
+
+new_command = 'Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
+
+new_command_test = run(new_command)
+print(new_command_test.stdout.decode())
+
+print(new_command_test.returncode)
+
+# print(new_command_test.stdout.decode())
 
 
 

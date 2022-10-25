@@ -23,7 +23,7 @@ jobs:
     steps:  
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: synapse-build-deploy-wheel
+      - name: Synapse Build Deploy Wheel
         uses: ./.github/actions/synapse_build_deploy_wheel_action
         with:
           CREDS: ${{ secrets.AZURE_CREDENTIALS }}
