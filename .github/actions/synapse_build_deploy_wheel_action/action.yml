@@ -52,7 +52,7 @@ runs:
           Import-Module Az.Synapse
           python ${{ github.action_path }}/SynapseBuildWheelScript.py
     
-    - name: Check if Python Script Failed
+    - name: Check if the Python Script Failed
       if: ${{ steps.run-python-script.outputs.myOutput == 'FAILED' }}
       uses: actions/github-script@v6
       with:

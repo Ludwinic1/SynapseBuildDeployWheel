@@ -8,9 +8,9 @@ def main():
 
     def run(cmd, message=None):
         result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
-        if result.returncode == 1:
+        if result.returncode == 1: # if the command failed
             my_output = 'FAILED'
-            subprocess.run(["powershell", "-Command", f'"myOutput={my_output}" >> $env:GITHUB_OUTPUT'], capture_output=True)
+            subprocess.run(["powershell", "-Command", f'"myOutput={my_output}" >> $env:GITHUB_OUTPUT'])
             # print(f"::set-output name=myOutput::{my_output}")
             # print(f"myOutput={my_output}" >> $GITHUB_OUTPUT)
             raise Exception(result.stderr.decode())
