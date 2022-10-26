@@ -12,7 +12,7 @@ inputs:
     required: true
   WHEEL_FILE_NAME:
     description: Wheel file name to build/deploy to Synapse 
-    required: false
+    required: true
 
 runs:
   using: composite 

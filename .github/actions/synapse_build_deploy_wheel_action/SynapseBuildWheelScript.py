@@ -27,15 +27,14 @@ remove_package = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}
 
 
 check_spark_pool_result = run(check_spark_pool)
-print(check_spark_pool_result.stdout.decode())
 if wheel_file_name in check_spark_pool_result.stdout.decode():
         remove_result = run(remove_spark_pool_package)
 else:
     remove_result = run(remove_package)
 
-# add_wheel_package_pool = f'''$package = New-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Package ".\dist\{wheel_file_name}";
-#                             Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Add -Package $package'''
-# add_wheel_package_pool_result = run(add_wheel_package_pool)
+add_wheel_package_pool = f'''$package = New-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Package ".\dist\{wheel_file_name}";
+                            Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Add -Package $package'''
+add_wheel_package_pool_result = run(add_wheel_package_pool)
 
 
 
