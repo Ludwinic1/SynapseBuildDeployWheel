@@ -18,6 +18,9 @@ outputs:
   myOutput:
     description: some value
     value: ${{ steps.run-python-script.outputs.myOutput }}
+  myError:
+    description: some other description
+    value: ${{ steps.run-python-script.outputs.myError }}
 
 runs:
   using: composite 
