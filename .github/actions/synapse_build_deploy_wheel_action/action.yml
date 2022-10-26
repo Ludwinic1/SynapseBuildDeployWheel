@@ -34,7 +34,11 @@ runs:
         python setup.py bdist_wheel
       shell: pwsh 
 
-    - name: Run Python Script from Powershell 
+    - name: Run Python Script from Powershell
+      env:
+        TARGET_WS: ${{ inputs.TARGET_WS }}
+        SPARK_POOL_NAME: ${{ inputs.SPARK_POOL_NAME }}
+        WHEEL_FILE_NAME: ${{ inputs.WHEEL_FILE_NAME }}
       uses: azure/powershell@v1 
       with:
         azPSVersion: latest 

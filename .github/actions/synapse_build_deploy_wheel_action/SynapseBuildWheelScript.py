@@ -1,4 +1,10 @@
 import subprocess
+import os 
+
+synapse_ws = os.environ.get("TARGET_WS")
+spark_pool_name = os.environ.get("SPARK_POOL_NAME")
+wheel_file_name = os.environ.get("WHEEL_FILE_NAME")
+
 
 def run(cmd):
     result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
@@ -6,8 +12,12 @@ def run(cmd):
         raise Exception(result.stderr.decode())
     return result 
 
-check_spark_pool = 'Get-AzSynapseSparkPool -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.SPARK_POOL_NAME }}"'
+ws = 'synapsemultiplereposws'
+pool = 'sparkpool1'
 
+check_spark_pool = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}"'
+
+# print(check_spark_pool)
 check_package = 'Get-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.WHEEL_FILE_NAME }}"'
 
 remove_spark_pool_package = '''$package = Get-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.WHEEL_FILE_NAME }}";
@@ -18,12 +28,13 @@ remove_package = 'Remove-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TA
 
 
 check_spark_pool_result = run(check_spark_pool)
-if 'pytest-7.1.3-py3-none-any.whl' in check_spark_pool_result.stdout.decode():
-        remove_result = run(remove_spark_pool_package)
+print(check_spark_pool_result.stdout.decode())
+# if 'pytest-7.1.3-py3-none-any.whl' in check_spark_pool_result.stdout.decode():
+#         remove_result = run(remove_spark_pool_package)
 
-add_wheel_package_pool = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Package ".\dist\${{ inputs.WHEEL_FILE_NAME }}";
-                            Update-AzSynapseSparkPool -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.SPARK_POOL_NAME }}" -PackageAction Add -Package $package'''
-add_wheel_package_pool_result = run(add_wheel_package_pool)
+# add_wheel_package_pool = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Package ".\dist\${{ inputs.WHEEL_FILE_NAME }}";
+#                             Update-AzSynapseSparkPool -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.SPARK_POOL_NAME }}" -PackageAction Add -Package $package'''
+# add_wheel_package_pool_result = run(add_wheel_package_pool)
 
 
 
