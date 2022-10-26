@@ -5,15 +5,11 @@ synapse_ws = os.environ.get("TARGET_WS")
 spark_pool_name = os.environ.get("SPARK_POOL_NAME")
 wheel_file_name = os.environ.get("WHEEL_FILE_NAME")
 
-print(spark_pool_name)
-print(wheel_file_name)
-
 def run(cmd):
     result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
     if result.returncode == 1:
         raise Exception(result.stderr.decode())
     return result 
-
 
 check_spark_pool = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}"'
 
@@ -30,11 +26,12 @@ check_spark_pool_result = run(check_spark_pool)
 if wheel_file_name in check_spark_pool_result.stdout.decode():
         remove_result = run(remove_spark_pool_package)
 else:
+    print(remove_package)
     remove_result = run(remove_package)
 
-add_wheel_package_pool = f'''$package = New-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Package ".\dist\{wheel_file_name}";
-                            Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Add -Package $package'''
-add_wheel_package_pool_result = run(add_wheel_package_pool)
+# add_wheel_package_pool = f'''$package = New-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Package ".\dist\{wheel_file_name}";
+#                             Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Add -Package $package'''
+# add_wheel_package_pool_result = run(add_wheel_package_pool)
 
 
 
