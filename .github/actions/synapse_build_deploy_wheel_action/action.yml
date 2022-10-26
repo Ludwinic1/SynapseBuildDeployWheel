@@ -45,6 +45,7 @@ runs:
         inlineScript: |
           Import-Module Az.Synapse
           python ${{ github.action_path }}/SynapseBuildWheelScript.py
+          
 
 
     # - name: Run Python Script
