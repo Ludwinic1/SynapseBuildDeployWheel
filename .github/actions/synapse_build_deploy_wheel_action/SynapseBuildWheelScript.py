@@ -1,30 +1,280 @@
 import subprocess
 
-# print('hello')
-
-
 def run(cmd):
-    completed = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
-    return completed 
+    result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
+    if result.returncode == 1:
+        raise Exception(result.stderr.decode())
+    return result 
+
+check_spark_pool = 'Get-AzSynapseSparkPool -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.SPARK_POOL_NAME }}"'
+
+check_package = 'Get-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.WHEEL_FILE_NAME }}"'
+
+remove_spark_pool_package = '''$package = Get-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.WHEEL_FILE_NAME }}";
+                        Update-AzSynapseSparkPool -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.SPARK_POOL_NAME }}" -PackageAction Remove -Package $package;
+                        Remove-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.WHEEL_FILE_NAME }}" -Force'''
+
+remove_package = 'Remove-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.WHEEL_FILE_NAME }}" -Force'
+
+
+check_spark_pool_result = run(check_spark_pool)
+if 'pytest-7.1.3-py3-none-any.whl' in check_spark_pool_result.stdout.decode():
+        remove_result = run(remove_spark_pool_package)
+
+add_wheel_package_pool = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Package ".\dist\${{ inputs.WHEEL_FILE_NAME }}";
+                            Update-AzSynapseSparkPool -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.SPARK_POOL_NAME }}" -PackageAction Add -Package $package'''
+add_wheel_package_pool_result = run(add_wheel_package_pool)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# This all works
+# def run(cmd):
+#     result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
+#     if result.returncode == 1:
+#         raise Exception(result.stderr.decode())
+#     return result 
+
+
+# check_spark_pool = 'Get-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1"'
+
+# check_package = 'Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
+
+# remove_spark_pool_package = '''$package = Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl";
+#                         Update-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1" -PackageAction Remove -Package $package;
+#                         Remove-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl" -Force'''
+
+# remove_package = 'Remove-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl" -Force'
+
+
+# check_spark_pool_result = run(check_spark_pool)
+# if 'pytest-7.1.3-py3-none-any.whl' in check_spark_pool_result.stdout.decode():
+#         remove_result = run(remove_spark_pool_package)
+
+# add_wheel_package_pool = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\pytest-7.1.3-py3-none-any.whl";
+#                             Update-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1" -PackageAction Add -Package $package'''
+# add_wheel_package_pool_result = run(add_wheel_package_pool)
+# End this all works
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# if check_spark_pool_result.returncode == 1:
+#     raise Exception(check_spark_pool_result.stderr.decode())
+
+# if 'pytest-7.1.3-py3-none-any.whl' in check_spark_pool_result.stdout.decode():
+#         remove_result = run(remove_spark_pool)
+#         if remove_result.returncode == 1:
+#             raise Exception(remove_result.stderr.decode())
+
+
+# add_wheel_package_pool = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\pytest-7.1.3-py3-none-any.whl";
+#                             Update-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1" -PackageAction Add -Package $package'''
+# add_wheel_package_pool_result = run(add_wheel_package_pool)
+# if add_wheel_package_pool_result.returncode == 1:
+#     raise Exception(add_wheel_package_pool_result.stderr.decode())
+# else:
+#     print(add_wheel_package_pool_result.stdout.decode())
+
+
+
+
+
+
+
+
+
 
 # hello_command = "WRITE-HOST 'Hello World!'"
 # hello_info = run(hello_command)
 
 # print(hello_info.stdout.decode())
 
+#   $package = Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"; 
+#         Update-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1" -PackageAction Remove -Package $package
 
-new_command2 = 'Import-Module Az.Synapse; Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
+
+# check_spark_pool = 'Get-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1"'
+# check_spark_result = run(check_spark_pool)
+
+# if 'pytest-7.1.3-py3-none-any.whl' in check_spark_result.stdout.decode():
+    
+
+# print(check_spark_result.stdout.decode())
+
+# try:
+#     check_spark_result = run(check_spark_pool)
+#     print(check_spark_result.stdout.decode())
+#     if 'pytest-7.1.3-py3-none-any.whl' in check_spark_result.stdout.decode():
+#         remove_result = run(remove_spark_pool)
+#         print(remove_result.stdout.decode())
+#     elif 'pytest-7.1.3-py3-none-any.whl'  not in check_spark_result.stdout.decode():
+#         check_result = run(check_package)
+#         if check_result.returncode == 0:
+#             remove_pk = run(remove_package)
+#             print('here')
+# except Exception as e:
+#     raise e
+
+
+
+
+
+
+
+
+
+# check_result = run(check_package)
+# if check_result.returncode == 0:
+#     check_spark_result = run(check_spark_pool)
+#     if 'pytest-7.1.3-py3-none-any.whl' in check_spark_result.stdout.decode():
+#         remove_result = run(remove_spark_pool)
+#         print(remove_result.stdout.decode())
+#         new_result = run(remove_spark)
+#         print(new_result.stdout.decode())
+#         print('error', new_result.stderr.decode())
+
+
+# add_wheel_packages = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\dist\My_Setup_File-1.0-py3-none-any.whl"'''
+
+add_wheel_package = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\pytest-7.1.3-py3-none-any.whl"'''
+# add_wheel = run(add_wheel_package)
+# print(add_wheel.stdout.decode())
+# print(add_wheel.stderr.decode())
+
+
+#     remove_workspace_package = 'Remove-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl" -Force'
+#     remove_package_result = run(remove_workspace_package)
+#     print(remove_package_result.stderr.decode())
+# elif check_result.stderr.decode() and 'Status: 404 (Not Found)' not in check_result.stderr.decode():
+#     raise Exception(check_result.stderr.decode())
+
+
+
+
+
+# check_package = 'Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
+# check_result = run(check_package)
+
+# if check_result.stdout.decode():
+#     remove_workspace_package = 'Remove-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl" -Force'
+#     remove_package_result = run(remove_workspace_package)
+#     print(remove_package_result.stderr.decode())
+# elif check_result.stderr.decode() and 'Status: 404 (Not Found)' not in check_result.stderr.decode():
+#     raise Exception(check_result.stderr.decode())
+
+
+
+# if check_result.stderr.decode() and 'Status: 404 (Not Found)' in check_result.stderr.decode():
+    
+
+# check_spark_pool = 'Get-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1"'
+
+# check_spark_result = run(check_spark_pool)
+
+# if 'pytest-7.1.3-py3-none-any.whl' in check_spark_result.stdout.decode():
+#     print('yesssss')
+
+# print(check_spark_result.stdout.decode())
+
+# check_result = run(check_package)
+
+# if check_result.stderr.decode():
+#     print('nooooo')
+# else:
+#     print('yessss')
+
+# if check_result.stdout.decode():
+#     print('standard output')
+# else:
+#     print('no std output')
+
+# print(check_result.stderr.decode())
+# # print(check_result.stdout.decode())
+
+# print(check_result.returncode)
+
+
+
+new_command2 = '''Import-Module Az.Synapse;
+                  $package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\dist\My_Setup_File-1.0-py3-none-any.whl"'''
+                  
+                  
+                  
+      
+
+
+# $package = New-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Package ".\dist\${{ inputs.WHEEL_FILE_NAME }}
+
+
+# new_command2 = '''Import-Module Az.Synapse; 
+#                   $package = Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"; 
+#                   Update-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1" -PackageAction Remove -Package $package'''
+
+
 
 
 
 # new_command = 'Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
 
-new_command_test = run(new_command2)
+# new_command_test = run(new_command2)
 
-print(new_command_test.stderr.decode())
-print(new_command_test.stdout.decode())
+# print(new_command_test.stderr.decode())
+# print(new_command_test.stdout.decode())
 
-print(new_command_test.returncode)
+# print(new_command_test.returncode)
 
 # print(new_command_test.stdout.decode())
 

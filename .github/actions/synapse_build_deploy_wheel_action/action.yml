@@ -43,6 +43,6 @@ runs:
           python ${{ github.action_path }}/SynapseBuildWheelScript.py
 
 
-    - name: Run Python Script
-      run: python ${{ github.action_path }}/SynapseBuildWheelScript.py
-      shell: pwsh
+    # - name: Run Python Script
+    #   run: python ${{ github.action_path }}/SynapseBuildWheelScript.py
+    #   shell: pwsh
