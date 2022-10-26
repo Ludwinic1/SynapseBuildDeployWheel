@@ -17,6 +17,7 @@ def main():
         if result.returncode == 1:
             my_output = 'FAILED'
             subprocess.run(["powershell", "-Command", f'"myOutput={my_output}" >> $env:GITHUB_OUTPUT'], capture_output=True)
+            subprocess.run(["powershell", "-Command", f'"myError={result.stderr.decode()}" >> $env:GITHUB_OUTPUT'], capture_output=True)
             # print(f"::set-output name=myOutput::{my_output}")
             # print(f"myOutput={my_output}" >> $GITHUB_OUTPUT)
             raise Exception(result.stderr.decode())
@@ -52,8 +53,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # status = True
-    # print(f"::set-output name=MyOutput::{status}")
 
 
 
