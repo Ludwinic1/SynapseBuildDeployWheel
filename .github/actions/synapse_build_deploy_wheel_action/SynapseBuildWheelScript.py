@@ -20,9 +20,9 @@ check_spark_pool = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name 
 
 remove_spark_pool_package = f'''$package = Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}";
                         Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Remove -Package $package;
-                        Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force'''
+                        Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force2'''
 
-remove_package = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name {wheel_file_name} -Force'
+remove_package = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name {wheel_file_name} -Force2'
 
 check_spark_pool_result = run(check_spark_pool)
 if wheel_file_name in check_spark_pool_result.stdout.decode():
