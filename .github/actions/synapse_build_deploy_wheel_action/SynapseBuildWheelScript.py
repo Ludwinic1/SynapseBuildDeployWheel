@@ -7,17 +7,19 @@ def main():
     spark_pool_name = os.environ.get("SPARK_POOL_NAME")
     wheel_file_name = os.environ.get("WHEEL_FILE_NAME")
 
-    def run(cmd, message):
+    def run(cmd, message=None):
         result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
         if result.returncode == 1:
             my_output = 'FAILED'
             # print(f"::set-output name=myOutput::{my_output}")
-            print(f"myOutput={my_output}" >> $GITHUB_OUTPUT)
+            # print(f"myOutput={my_output}" >> $GITHUB_OUTPUT)
             raise Exception(result.stderr.decode())
         else:
             print(message)
         return result 
 
+    my_output = 'FAILED'
+    test1 = run(f'"myOutput={my_output}" >> $env:GITHUB_OUTPUT')
     get_spark_pool_info = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}222"'
 
     get_workspace_packages = f'Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}"'
