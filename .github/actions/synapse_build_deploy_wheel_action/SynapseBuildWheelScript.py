@@ -7,11 +7,6 @@ def main():
     spark_pool_name = os.environ.get("SPARK_POOL_NAME")
     wheel_file_name = os.environ.get("WHEEL_FILE_NAME")
 
-
-    def process_error_run(cmd, error_variable):
-        result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
-
-
     def run(cmd, message=None):
         result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
         if result.returncode == 1:
