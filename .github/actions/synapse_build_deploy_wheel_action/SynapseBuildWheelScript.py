@@ -10,7 +10,8 @@ def main():
     def run(cmd, message):
         result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
         if result.returncode == 1:
-            sys.exit(59)
+            my_output = 'FAILED'
+            print(f"::set-output name=myOutput::{my_output}")
             raise Exception(result.stderr.decode())
             
 

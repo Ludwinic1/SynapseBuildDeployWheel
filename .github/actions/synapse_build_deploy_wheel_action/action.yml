@@ -14,6 +14,11 @@ inputs:
     description: Wheel file name to build/deploy to Synapse 
     required: true
 
+outputs:
+  myOutput:
+    description: some value
+    value: ${{ steps.run-python-script.outputs.myOutput }}
+
 runs:
   using: composite 
   steps:
@@ -35,6 +40,7 @@ runs:
       shell: pwsh 
 
     - name: Run Python Script from Powershell
+      id: run-python-script
       env:
         TARGET_WS: ${{ inputs.TARGET_WS }}
         SPARK_POOL_NAME: ${{ inputs.SPARK_POOL_NAME }}
@@ -45,6 +51,13 @@ runs:
         inlineScript: |
           Import-Module Az.Synapse
           python ${{ github.action_path }}/SynapseBuildWheelScript.py
+    
+    - name: Check if Python Script Failed
+      if: ${{ steps.run-python-script.outputs.myOutput == 'FAILED' }}
+      uses: actions/github-script@v3 
+      with:
+        script: |
+          core.setFailed('Python Script Failed')
           
           
       # $package = New-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Package ".\dist\${{ inputs.WHEEL_FILE_NAME }}"
