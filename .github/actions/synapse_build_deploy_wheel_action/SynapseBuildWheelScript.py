@@ -189,8 +189,8 @@ add_wheel_package_pool_result = run(add_wheel_package_pool)
 
 # add_wheel_packages = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\dist\My_Setup_File-1.0-py3-none-any.whl"'''
 
-add_wheel_package = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\pytest-7.1.3-py3-none-any.whl"'''
-# add_wheel = run(add_wheel_package)
+# add_wheel_package = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\pytest-7.1.3-py3-none-any.whl"'''
+# # add_wheel = run(add_wheel_package)
 # print(add_wheel.stdout.decode())
 # print(add_wheel.stderr.decode())
 
@@ -248,8 +248,8 @@ add_wheel_package = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "
 
 
 
-new_command2 = '''Import-Module Az.Synapse;
-                  $package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\dist\My_Setup_File-1.0-py3-none-any.whl"'''
+# new_command2 = '''Import-Module Az.Synapse;
+#                   $package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\dist\My_Setup_File-1.0-py3-none-any.whl"'''
                   
                   
                   
