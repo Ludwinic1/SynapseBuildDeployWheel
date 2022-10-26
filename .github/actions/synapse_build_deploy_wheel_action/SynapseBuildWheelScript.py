@@ -5,6 +5,8 @@ synapse_ws = os.environ.get("TARGET_WS")
 spark_pool_name = os.environ.get("SPARK_POOL_NAME")
 wheel_file_name = os.environ.get("WHEEL_FILE_NAME")
 
+print(spark_pool_name)
+
 def run(cmd):
     result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
     if result.returncode == 1:
