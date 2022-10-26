@@ -18,9 +18,6 @@ outputs:
   myOutput:
     description: some value
     value: ${{ steps.run-python-script.outputs.myOutput }}
-  myError:
-    description: some other description
-    value: ${{ steps.run-python-script.outputs.myError }}
 
 runs:
   using: composite 
@@ -60,7 +57,7 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
-          core.setFailed("${{ steps.run-python-script.outputs.myError }}")
+          core.setFailed('Run Python Script from Powershell step failed. See above in this screen for the error message')
           
           
       # $package = New-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Package ".\dist\${{ inputs.WHEEL_FILE_NAME }}"
