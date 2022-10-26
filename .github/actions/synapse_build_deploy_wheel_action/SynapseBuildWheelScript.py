@@ -20,7 +20,7 @@ def main():
 
     # my_output = 'FAILED2'
     # test1 = run(f'"myOutput={my_output}" >> $env:GITHUB_OUTPUT')
-    get_spark_pool_info = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}222"'
+    get_spark_pool_info = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}"'
 
     get_workspace_packages = f'Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}"'
 
