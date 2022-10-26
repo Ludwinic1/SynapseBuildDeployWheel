@@ -57,7 +57,7 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
-          core.setFailed(${{ steps.run-python-script.outputs.myOutput }})
+          core.setFailed(${{ steps.run-python-script.outputs.myError }})
           
           
       # $package = New-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Package ".\dist\${{ inputs.WHEEL_FILE_NAME }}"
