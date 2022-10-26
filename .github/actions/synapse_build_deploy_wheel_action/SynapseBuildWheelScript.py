@@ -11,10 +11,9 @@ def main():
         result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
         if result.returncode == 1:
             my_output = 'FAILED'
-            print(f"::set-output name=myOutput::{my_output}")
+            # print(f"::set-output name=myOutput::{my_output}")
+            print(f"myOutput={my_output} >> $GITHUB_OUTPUT")
             raise Exception(result.stderr.decode())
-            
-
         else:
             print(message)
         return result 
