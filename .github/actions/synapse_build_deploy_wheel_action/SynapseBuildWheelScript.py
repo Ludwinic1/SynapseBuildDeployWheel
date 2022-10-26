@@ -1,6 +1,5 @@
 import subprocess
 import os
-import sys
 
 def main():
     synapse_ws = os.environ.get("TARGET_WS")
