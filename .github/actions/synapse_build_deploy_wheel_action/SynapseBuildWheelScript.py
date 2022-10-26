@@ -20,7 +20,7 @@ remove_spark_pool_package = f'''$package = Get-AzSynapseWorkspacePackage -Worksp
                         Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Remove -Package $package;
                         Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force'''
 
-remove_package = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "${{ inputs.WHEEL_FILE_NAME }}" -Force'
+remove_package = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force'
 
 
 check_spark_pool_result = run(check_spark_pool)
