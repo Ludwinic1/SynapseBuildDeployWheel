@@ -6,6 +6,7 @@ spark_pool_name = os.environ.get("SPARK_POOL_NAME")
 wheel_file_name = os.environ.get("WHEEL_FILE_NAME")
 
 print(spark_pool_name)
+print(wheel_file_name)
 
 def run(cmd):
     result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
@@ -26,6 +27,7 @@ remove_package = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}
 
 
 check_spark_pool_result = run(check_spark_pool)
+print(check_spark_pool_result.stdout())
 if wheel_file_name in check_spark_pool_result.stdout.decode():
         remove_result = run(remove_spark_pool_package)
 else:
