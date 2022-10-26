@@ -13,20 +13,22 @@ def run(cmd):
 
 check_spark_pool = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}"'
 
-# check_package = f'Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}"'
+check_package = f'Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}"'
+check_p = run(check_package)
+print(check_p.stdout.decode())
 
-remove_spark_pool_package = f'''$package = Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}";
-                        Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Remove -Package $package;
-                        Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force'''
+# remove_spark_pool_package = f'''$package = Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}";
+#                         Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Remove -Package $package;
+#                         Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force'''
 
-remove_package = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name {wheel_file_name} -Force'
+# remove_package = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name {wheel_file_name} -Force'
 
 
-check_spark_pool_result = run(check_spark_pool)
-if wheel_file_name in check_spark_pool_result.stdout.decode():
-        remove_result = run(remove_spark_pool_package)
-else:
-    remove_result = run(remove_package)
+# check_spark_pool_result = run(check_spark_pool)
+# if wheel_file_name in check_spark_pool_result.stdout.decode():
+#         remove_result = run(remove_spark_pool_package)
+# else:
+#     remove_result = run(remove_package)
 
 # add_wheel_package_pool = f'''$package = New-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Package ".\dist\{wheel_file_name}";
 #                             Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Add -Package $package'''
