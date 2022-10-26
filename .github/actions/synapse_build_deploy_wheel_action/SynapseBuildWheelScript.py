@@ -27,7 +27,7 @@ remove_package = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}
 
 
 check_spark_pool_result = run(check_spark_pool)
-print(check_spark_pool_result.stdout())
+print(check_spark_pool_result.stdout.decode())
 if wheel_file_name in check_spark_pool_result.stdout.decode():
         remove_result = run(remove_spark_pool_package)
 else:
