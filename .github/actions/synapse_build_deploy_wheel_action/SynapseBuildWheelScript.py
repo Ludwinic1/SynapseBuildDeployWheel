@@ -30,9 +30,10 @@ def main():
     print(f"Getting info from Spark Pool")
     check_spark_pool_result = run(check_spark_pool, "Successfully retrieved spark pool info")
     if wheel_file_name in check_spark_pool_result.stdout.decode():
+            print("Wheel file is located on the spark pool. Attempting to remove it from the spark pool and workspace packages")
             remove_result = run(remove_spark_pool_package, "Successfully removed wheel file from the spark pool and workspace packages")
     else:
-        check_workspace_packages_result = run(check_workspace_packages, "Grabbed workspace package info")
+        check_workspace_packages_result = run(check_workspace_packages, "Successfully retrieved workspace package info")
         if wheel_file_name in check_workspace_packages_result.stdout.decode():
             remove_result = run(remove_package, "Successfully removed wheel from the workspace packages")
 
