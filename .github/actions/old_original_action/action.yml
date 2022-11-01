@@ -1,0 +1,50 @@
+name: Build and Deploy Wheel Action
+description: OLD CODE. See SynapseBuildDeployWheel repo. Build and deploy the wheel file to the Synapse workspace(s) and spark pool. Includes removing the current version.
+inputs:
+  CREDS:
+    required: true 
+    description: Azure Credentials coming from the original workflow
+  TARGET_WS: 
+    description: Target Synapse name to deploy the wheel to 
+    required: true 
+  SPARK_POOL_NAME:
+    description: Synapse Spark Pool to deploy the wheel to
+    required: true 
+  WHEEL_FILE_NAME:
+    description: Wheel file name to build/deploy to Synapse 
+    required: true 
+
+runs:
+  using: composite 
+  steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ inputs.CREDS }}
+        enable-AzPSSession: true 
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Build Python Wheel 
+      run: |
+        python -m pip install wheel 
+        python setup.py bdist_wheel
+      shell: pwsh 
+    
+    # Removes old wheel from Synapse Spark Pool and workspace packages.
+    # Then adds the new wheel to the workspace packages and Spark Pool.
+    - name: Remove Old Wheel and Add New Wheel 
+      uses: azure/powershell@v1 
+      with:
+        azPSVersion: latest
+        inlineScript: |
+          Import-Module Az.Synapse
+          $package = Get-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.WHEEL_FILE_NAME }}"
+          Update-AzSynapseSparkPool -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.SPARK_POOL_NAME }}" -PackageAction Remove -Package $package
+          Remove-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.WHEEL_FILE_NAME }}" -Force 
+          $package = New-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Package ".\dist\${{ inputs.WHEEL_FILE_NAME }}"
+          Update-AzSynapseSparkPool -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.SPARK_POOL_NAME }}" -PackageAction Add -Package $package
+

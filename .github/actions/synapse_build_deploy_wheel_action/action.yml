@@ -17,7 +17,7 @@ inputs:
 outputs:
   myOutput:
     description: some value
-    value: ${{ steps.run-python-script.outputs.myOutput }}
+    value: ${{ steps.run-python-script.outputs.myOutput }} 
 
 runs:
   using: composite 
