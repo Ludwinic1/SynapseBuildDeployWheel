@@ -20,7 +20,13 @@ def main():
 
     # my_output = 'FAILED2'
     # test1 = run(f'"myOutput={my_output}" >> $env:GITHUB_OUTPUT')
-    get_spark_pool_info = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}"'
+
+    get_spark_pool_info2 = f'''$spark_pool_info = Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}";
+                            $pool_packages = $spark_pool_info.WorkspacePackages;
+                            $pool_packages.Name'''
+
+
+    # get_spark_pool_info = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}"'
 
     get_workspace_packages = f'Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}"'
 
@@ -31,8 +37,8 @@ def main():
     remove_from_workspace_packages = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force'
 
     print(f"Getting info from Spark Pool")
-    get_spark_pool_info_result = run(get_spark_pool_info, "Successfully retrieved spark pool info")
-    print(get_spark_pool_info_result.stdout.decode())
+    get_spark_pool_info_result = run(get_spark_pool_info2, "Successfully retrieved spark pool info")
+    
     if wheel_file_name in get_spark_pool_info_result.stdout.decode():
             print("Wheel file is located on the spark pool. Attempting to remove it from the spark pool and workspace packages")
             remove_result = run(remove_from_spark_pool_and_packages, "Successfully removed wheel file from the spark pool and workspace packages")
