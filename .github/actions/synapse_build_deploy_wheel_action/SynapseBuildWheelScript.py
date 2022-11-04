@@ -41,9 +41,9 @@ def main():
         if wheel_file_name in get_workspace_packages_result.stdout.decode():
             remove_result = run(remove_from_workspace_packages, "Successfully removed wheel from the workspace packages")
 
-    # add_wheel_to_pool_and_packages = f'''$package = New-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Package ".\dist\{wheel_file_name}";
-    #                             Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Add -Package $package'''
-    # add_wheel_to_pool_and_packages_result = run(add_wheel_to_pool_and_packages, "Successfully added the new wheel to the workspace packages and spark pool")
+    add_wheel_to_pool_and_packages = f'''$package = New-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Package ".\dist\{wheel_file_name}";
+                                Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Add -Package $package'''
+    add_wheel_to_pool_and_packages_result = run(add_wheel_to_pool_and_packages, "Successfully added the new wheel to the workspace packages and spark pool")
 
 if __name__ == "__main__":
     main()
