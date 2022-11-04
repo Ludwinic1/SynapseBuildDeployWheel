@@ -33,7 +33,7 @@ def main():
     print(f"Getting info from Spark Pool")
     get_spark_pool_info_result = run(get_spark_pool_info, "Successfully retrieved spark pool info")
     print(get_spark_pool_info_result.stdout.decode())
-    if wheel_file_name in get_spark_pool_info_result.stdout.decode():
+    if wheel_file_name or 'openpyxl-3.0.10-py2.py3-none-any.whl' in get_spark_pool_info_result.stdout.decode():
             print("Wheel file is located on the spark pool. Attempting to remove it from the spark pool and workspace packages")
             remove_result = run(remove_from_spark_pool_and_packages, "Successfully removed wheel file from the spark pool and workspace packages")
     else:
