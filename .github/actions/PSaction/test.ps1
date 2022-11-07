@@ -41,7 +41,8 @@ try {
         if ($wheel_file_name -in $get_workspace_packages.Name) {
             Remove-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$wheel_file_name" -Force;
             
-            # $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
+            $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
+            $package
             # Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
         }    
         else {
