@@ -43,7 +43,7 @@ try {
             
             $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
             $package
-            # Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
+            Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
         }    
         else {
             $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
