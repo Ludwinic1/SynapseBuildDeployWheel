@@ -28,16 +28,16 @@ runs:
         creds: ${{ inputs.CREDS }}
         enable-AzPSSession: true 
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+    # - name: Setup Python
+    #   uses: actions/setup-python@v4
+    #   with:
+    #     python-version: '3.10'
     
-    - name: Build Python Wheel 
-      run: |
-        python -m pip install wheel 
-        python setup.py bdist_wheel
-      shell: pwsh 
+    # - name: Build Python Wheel 
+    #   run: |
+    #     python -m pip install wheel 
+    #     python setup.py bdist_wheel
+    #   shell: pwsh 
 
     - name: Run Powershell
       id: run-python-script
