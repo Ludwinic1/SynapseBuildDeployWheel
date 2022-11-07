@@ -2,7 +2,9 @@
 
 $synapse_ws = $Env:TARGET_WS
 $spark_pool_name = $Env:SPARK_POOL_NAME
-$wheel_file_name = $Env:WHEEL_FILE_NAME
+# $wheel_file_name = $Env:WHEEL_FILE_NAME
+
+$wheel_file_name = 'My_Setup_File-1.0-py3-none-any.whl'
 
 # Logic
 
