@@ -1,0 +1,32 @@
+name: Synapse Build and Deploy Wheel to Workspace Packages and Spark Pool.
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy-to-env1:
+        required: true 
+        type: boolean
+        default: true 
+        description: deploy wheel to env1. 
+      deploy-to-env2:
+        required: true 
+        type: boolean 
+        default: false 
+        description: deploy wheel to env2. 
+        # can add other Synapse workspaces here
+
+jobs:
+  deploy-to-env1:
+    if: ${{ github.event.inputs.deploy-to-env1 == 'true' }}
+    runs-on: windows-latest
+    environment: env1 # or whatever env I have in GitHub Secrets
+    steps:  
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Synapse Build Deploy Wheel
+        uses: ./.github/actions/synapse_build_deploy_wheel_action
+        with:
+          CREDS: ${{ secrets.AZURE_CREDENTIALS }}
+          TARGET_WS: ${{ secrets.TARGET_WS }}
+          SPARK_POOL_NAME: ${{ secrets.SPARK_POOL_NAME }}
+          WHEEL_FILE_NAME: ${{ secrets.WHEEL_FILE_NAME }}

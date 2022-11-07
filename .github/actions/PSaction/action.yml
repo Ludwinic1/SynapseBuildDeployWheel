@@ -1,0 +1,61 @@
+name: PS Build and Deploy Wheel Action
+description: Build and deploy the wheel file to the Synapse workspace(s) and spark pool. Includes removing the current version.
+inputs:
+  CREDS:
+    required: true 
+    description: Azure Credentials coming from the original workflow
+  TARGET_WS: 
+    description: Target Synapse name to deploy the wheel to 
+    required: true 
+  SPARK_POOL_NAME:
+    description: Synapse Spark Pool to deploy the wheel to
+    required: true
+  WHEEL_FILE_NAME:
+    description: Wheel file name to build/deploy to Synapse 
+    required: true
+
+outputs:
+  myOutput:
+    description: some value
+    value: ${{ steps.run-python-script.outputs.myOutput }} 
+
+runs:
+  using: composite 
+  steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ inputs.CREDS }}
+        enable-AzPSSession: true 
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Build Python Wheel 
+      run: |
+        python -m pip install wheel 
+        python setup.py bdist_wheel
+      shell: pwsh 
+
+    - name: Run Powershell
+      id: run-python-script
+      env:
+        TARGET_WS: ${{ inputs.TARGET_WS }}
+        SPARK_POOL_NAME: ${{ inputs.SPARK_POOL_NAME }}
+        WHEEL_FILE_NAME: ${{ inputs.WHEEL_FILE_NAME }}
+      uses: azure/powershell@v1 
+      with:
+        azPSVersion: latest 
+        inlineScript: |
+          Import-Module Az.Synapse
+          ${{ github.action_path }}\test.ps1
+    
+    # - name: Check if the Python Script Failed
+    #   if: ${{ steps.run-python-script.outputs.myOutput == 'FAILED' }}
+    #   uses: actions/github-script@v6
+    #   with:
+    #     script: |
+    #       core.setFailed('Run Python Script from Powershell step failed. See above in this screen for the error message')
+          
