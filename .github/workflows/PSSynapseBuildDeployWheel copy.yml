@@ -1,4 +1,4 @@
-name: Synapse Build and Deploy Wheel to Workspace Packages and Spark Pool.
+name: PS Synapse Build and Deploy Wheel to Workspace Packages and Spark Pool.
 
 on:
   workflow_dispatch:
