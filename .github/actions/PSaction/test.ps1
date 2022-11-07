@@ -1,6 +1,6 @@
 # Environment variables
 
-$synapse_ws = $Env:SYNAPSE_WS
+$synapse_ws = $Env:TARGET_WS
 $spark_pool_name = $Env:SPARK_POOL_NAME
 $wheel_file_name = $Env:WHEEL_FILE_NAME
 
