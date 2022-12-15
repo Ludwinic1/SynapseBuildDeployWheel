@@ -45,3 +45,5 @@ jobs:
           TARGET_WS: ${{ secrets.TARGET_WS }}
           SPARK_POOL_NAME: ${{ secrets.SPARK_POOL_NAME }}
           WHEEL_FILE_NAME: ${{ secrets.WHEEL_FILE_NAME }}
+  
+  # Add more workspaces 

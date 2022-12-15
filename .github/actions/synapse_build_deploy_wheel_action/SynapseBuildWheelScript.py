@@ -34,6 +34,7 @@ def main():
 
     print(f"Getting info from Spark Pool")
     get_spark_pool_info_result = run(get_spark_pool_info, "Successfully retrieved spark pool info")
+    print(get_spark_pool_info_result.stdout.decode())
     
     if WHEEL_FILE_NAME in get_spark_pool_info_result.stdout.decode():
             print("Wheel file is located on the spark pool. Attempting to remove it from the spark pool and workspace packages")
