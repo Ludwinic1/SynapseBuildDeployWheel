@@ -11,49 +11,106 @@ $wheel_file_name = 'My_Setup_File-1.0-py3-none-any.whl'
 # Get-AzSynapseSparkPool -WorkspaceName "$synapse_w" -Name "$spark_pool_name"
 
 
-# try {
+# try{
 #     Get-AzSynapseSparkPool -WorkspaceName "$synapse_w" -Name "$spark_pool_name"
 # }
 # catch {
 #     throw $Error
 # }
 
-# try { NonsenseString }
+# try{ NonsenseString }
 # catch {
 #   Write-Host "An error occurred:"
 #   Write-Host $_
 # }
 
+try
 
-try {
-    $spark_pool_info = Get-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name"
 
-    if ($wheel_file_name -in $spark_pool_info.WorkspacePackages.Name) {
-        $package = Get-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$wheel_file_name";
-        Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Remove -Package $package;
-        Remove-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -Force;
 
+$spark_pool_info = Get-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name"
+
+if ($wheel_file_name -in $spark_pool_info.WorkspacePackages.Name) {
+    $package = Get-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$wheel_file_name";
+    Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Remove -Package $package;
+    Remove-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -Force;
+
+    $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
+    Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
+
+} else {
+    Write-Host 'HERE'
+    $get_workspace_packages = Get-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws"
+    $get_workspace_packages
+    if ($wheel_file_name -in $get_workspace_packages.Name) {
+        Remove-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$wheel_file_name" -Force;
+        
+        $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
+        $package
+        Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
+    }    
+    else {
         $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
         Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
-
-    } else {
-        Write-Host 'HERE'
-        $get_workspace_packages = Get-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws"
-        $get_workspace_packages
-        if ($wheel_file_name -in $get_workspace_packages.Name) {
-            Remove-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$wheel_file_name" -Force;
-            
-            $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
-            $package
-            Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
-        }    
-        else {
-            $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
-            Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
-        }
     }
 }
-catch {
 
-    throw $Error
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# try{
+#     $spark_pool_info = Get-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name"
+
+#     if ($wheel_file_name -in $spark_pool_info.WorkspacePackages.Name) {
+#         $package = Get-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$wheel_file_name";
+#         Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Remove -Package $package;
+#         Remove-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -Force;
+
+#         $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
+#         Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
+
+#     } else {
+#         Write-Host 'HERE'
+#         $get_workspace_packages = Get-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws"
+#         $get_workspace_packages
+#         if ($wheel_file_name -in $get_workspace_packages.Name) {
+#             Remove-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Name "$wheel_file_name" -Force;
+            
+#             $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
+#             $package
+#             Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
+#         }    
+#         else {
+#             $package = New-AzSynapseWorkspacePackage -WorkspaceName "$synapse_ws" -Package ".\dist\$wheel_file_name";
+#             Update-AzSynapseSparkPool -WorkspaceName "$synapse_ws" -Name "$spark_pool_name" -PackageAction Add -Package $package
+#         }
+#     }
+# }
+# catch {
+
+#     throw $Error
+# }

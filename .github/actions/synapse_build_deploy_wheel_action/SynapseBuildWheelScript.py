@@ -2,158 +2,55 @@ import subprocess
 import os
 
 def main():
-    synapse_ws = os.environ.get("TARGET_WS")
-    spark_pool_name = os.environ.get("SPARK_POOL_NAME")
-    wheel_file_name = os.environ.get("WHEEL_FILE_NAME")
+    SYNAPSE_WS = os.environ.get("TARGET_WS")
+    SPARK_POOL_NAME = os.environ.get("SPARK_POOL_NAME")
+    WHEEL_FILE_NAME = os.environ.get("WHEEL_FILE_NAME")
 
     def run(cmd, message=None):
         result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
         if result.returncode == 1: # if the command failed
-            my_output = 'FAILED'
-            subprocess.run(["powershell", "-Command", f'"myOutput={my_output}" >> $env:GITHUB_OUTPUT'])
-            # print(f"::set-output name=myOutput::{my_output}")
-            # print(f"myOutput={my_output}" >> $GITHUB_OUTPUT)
+            error_output = 'FAILED'
+            # Output the error_output to the GITHUB_OUTPUT environment file
+            # For more info, see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/ 
+            subprocess.run(["powershell", "-Command", f'"ErrorOutput={error_output}" >> $env:GITHUB_OUTPUT'])
             raise Exception(result.stderr.decode())
         else:
             print(message)
         return result 
 
-    # my_output = 'FAILED2'
-    # test1 = run(f'"myOutput={my_output}" >> $env:GITHUB_OUTPUT')
+    get_spark_pool_info = f'''$spark_pool_info = Get-AzSynapseSparkPool -WorkspaceName "{SYNAPSE_WS}" -Name "{SPARK_POOL_NAME}";
+                               $pool_packages = $spark_pool_info.WorkspacePackages.Name;
+                            '''
 
-    get_spark_pool_info2 = f'''$spark_pool_info = Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}";
-                            $pool_packages = $spark_pool_info.WorkspacePackages;
-                            $pool_packages.Name'''
+    get_workspace_packages = f'Get-AzSynapseWorkspacePackage -WorkspaceName "{SYNAPSE_WS}"'
 
+    remove_from_spark_pool_and_packages = f'''
+                                    $package = Get-AzSynapseWorkspacePackage -WorkspaceName "{SYNAPSE_WS}" -Name "{WHEEL_FILE_NAME}";
+                                    Update-AzSynapseSparkPool -WorkspaceName "{SYNAPSE_WS}" -Name "{SPARK_POOL_NAME}" -PackageAction Remove -Package $package;
+                                    Remove-AzSynapseWorkspacePackage -WorkspaceName "{SYNAPSE_WS}" -Name "{WHEEL_FILE_NAME}" -Force
+                                    '''
 
-    # get_spark_pool_info = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}"'
-
-    get_workspace_packages = f'Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}"'
-
-    remove_from_spark_pool_and_packages = f'''$package = Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}";
-                                    Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Remove -Package $package;
-                                    Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force'''
-
-    remove_from_workspace_packages = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force'
+    remove_from_workspace_packages = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{SYNAPSE_WS}" -Name "{WHEEL_FILE_NAME}" -Force'
 
     print(f"Getting info from Spark Pool")
-    get_spark_pool_info_result = run(get_spark_pool_info2, "Successfully retrieved spark pool info")
+    get_spark_pool_info_result = run(get_spark_pool_info, "Successfully retrieved spark pool info")
     
-    if wheel_file_name in get_spark_pool_info_result.stdout.decode():
+    if WHEEL_FILE_NAME in get_spark_pool_info_result.stdout.decode():
             print("Wheel file is located on the spark pool. Attempting to remove it from the spark pool and workspace packages")
             remove_result = run(remove_from_spark_pool_and_packages, "Successfully removed wheel file from the spark pool and workspace packages")
     else:
         get_workspace_packages_result = run(get_workspace_packages, "Successfully retrieved workspace package info")
-        if wheel_file_name in get_workspace_packages_result.stdout.decode():
+        if WHEEL_FILE_NAME in get_workspace_packages_result.stdout.decode():
             remove_result = run(remove_from_workspace_packages, "Successfully removed wheel from the workspace packages")
 
-    add_wheel_to_pool_and_packages = f'''$package = New-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Package ".\dist\{wheel_file_name}";
-                                Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Add -Package $package'''
+    add_wheel_to_pool_and_packages = f'''
+                                $package = New-AzSynapseWorkspacePackage -WorkspaceName "{SYNAPSE_WS}" -Package ".\dist\{WHEEL_FILE_NAME}";
+                                Update-AzSynapseSparkPool -WorkspaceName "{SYNAPSE_WS}" -Name "{SPARK_POOL_NAME}" -PackageAction Add -Package $package
+                                '''
     add_wheel_to_pool_and_packages_result = run(add_wheel_to_pool_and_packages, "Successfully added the new wheel to the workspace packages and spark pool")
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-# This all works too
-# def run(cmd):
-#     result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
-#     if result.returncode == 1:
-#         raise Exception(result.stderr.decode())
-
-#     return result 
-
-# get_spark_pool_info = f'Get-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}"'
-
-# # check_package = f'Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}"'
-
-# remove_from_spark_pool_and_packages = f'''$package = Get-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}";
-#                         Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Remove -Package $package;
-#                         Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name "{wheel_file_name}" -Force'''
-
-# remove_from_workspace_packages = f'Remove-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Name {wheel_file_name} -Force'
-
-# get_spark_pool_info_result = run(get_spark_pool_info)
-# if wheel_file_name in get_spark_pool_info_result.stdout.decode():
-#         remove_result = run(remove_from_spark_pool_and_packages)
-# else:
-#     remove_result = run(remove_from_workspace_packages)
-
-# add_wheel_to_pool_and_packages = f'''$package = New-AzSynapseWorkspacePackage -WorkspaceName "{synapse_ws}" -Package ".\dist\{wheel_file_name}";
-#                             Update-AzSynapseSparkPool -WorkspaceName "{synapse_ws}" -Name "{spark_pool_name}" -PackageAction Add -Package $package'''
-# add_wheel_to_pool_and_packages_result = run(add_wheel_to_pool_and_packages)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# This all works
-# def run(cmd):
-#     result = subprocess.run(["powershell", "-Command", cmd], capture_output=True)
-#     if result.returncode == 1:
-#         raise Exception(result.stderr.decode())
-#     return result 
-
-
-# get_spark_pool_info = 'Get-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1"'
-
-# check_package = 'Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl"'
-
-# remove_from_spark_pool_and_packages = '''$package = Get-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl";
-#                         Update-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1" -PackageAction Remove -Package $package;
-#                         Remove-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl" -Force'''
-
-# remove_from_workspace_packages = 'Remove-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Name "pytest-7.1.3-py3-none-any.whl" -Force'
-
-
-# get_spark_pool_info_result = run(get_spark_pool_info)
-# if 'pytest-7.1.3-py3-none-any.whl' in get_spark_pool_info_result.stdout.decode():
-#         remove_result = run(remove_from_spark_pool_and_packages)
-
-# add_wheel_to_pool_and_packages = '''$package = New-AzSynapseWorkspacePackage -WorkspaceName "synapsemultiplereposws" -Package ".\SynapseBuildDeployWheel\pytest-7.1.3-py3-none-any.whl";
-#                             Update-AzSynapseSparkPool -WorkspaceName "synapsemultiplereposws" -Name "sparkpool1" -PackageAction Add -Package $package'''
-# add_wheel_to_pool_and_packages_result = run(add_wheel_to_pool_and_packages)
-# End this all works
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

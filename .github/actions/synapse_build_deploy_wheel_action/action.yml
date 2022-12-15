@@ -1,5 +1,5 @@
 name: Build and Deploy Wheel Action
-description: Build and deploy the wheel file to the Synapse workspace(s) and spark pool. Includes removing the current version.
+description: Build and deploy the wheel file to the Synapse workspace(s) and Spark Pool. Includes removing the current version.
 inputs:
   CREDS:
     required: true 
@@ -15,9 +15,9 @@ inputs:
     required: true
 
 outputs:
-  myOutput:
-    description: some value
-    value: ${{ steps.run-python-script.outputs.myOutput }} 
+  ErrorOutput:
+    description: If Python script below fails, ErrorOutput would be saved as 'FAILED'.
+    value: ${{ steps.run-python-script.outputs.ErrorOutput }} 
 
 runs:
   using: composite 
@@ -35,8 +35,8 @@ runs:
     
     - name: Build Python Wheel 
       run: |
-        python -m pip install wheel 
-        python setup.py bdist_wheel
+        pip install build
+        python -m build
       shell: pwsh 
 
     - name: Run Python Script from Powershell
@@ -53,18 +53,8 @@ runs:
           python ${{ github.action_path }}/SynapseBuildWheelScript.py
     
     - name: Check if the Python Script Failed
-      if: ${{ steps.run-python-script.outputs.myOutput == 'FAILED' }}
+      if: ${{ steps.run-python-script.outputs.ErrorOutput == 'FAILED' }}
       uses: actions/github-script@v6
       with:
         script: |
           core.setFailed('Run Python Script from Powershell step failed. See above in this screen for the error message')
-          
-          
-      # $package = New-AzSynapseWorkspacePackage -WorkspaceName "${{ inputs.TARGET_WS }}" -Package ".\dist\${{ inputs.WHEEL_FILE_NAME }}"
-      # Update-AzSynapseSparkPool -WorkspaceName "${{ inputs.TARGET_WS }}" -Name "${{ inputs.SPARK_POOL_NAME }}" -PackageAction Add -Package $package
-
-
-
-    # - name: Run Python Script
-    #   run: python ${{ github.action_path }}/SynapseBuildWheelScript.py
-    #   shell: pwsh
