@@ -29,7 +29,7 @@ jobs:
           CREDS: ${{ secrets.AZURE_CREDENTIALS }}
           TARGET_WS: ${{ secrets.TARGET_WS }}
           SPARK_POOL_NAME: ${{ secrets.SPARK_POOL_NAME }}
-          WHEEL_FILE_NAME: ${{ secrets.WHEEL_FILE_NAME2 }}
+          WHEEL_FILE_NAME: ${{ secrets.WHEEL_FILE_NAME }}
 
   deploy-to-synapse-ws-2:
     if: ${{ github.event.inputs.deploy-to-synapse-ws-2 == 'true' }}
