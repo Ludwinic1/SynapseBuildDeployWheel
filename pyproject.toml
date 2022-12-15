@@ -1,0 +1,14 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "SynapseBuildDeployWheel"
+description = "Building a wheel file to deploy to Synapse Spark Pools automatically."
+version = "0.1.0"
+authors = [
+    { name = "Nick Ludwig", email = "nick.ludwig223@gmail.com" },
+]
+license = "MIT"
+requires-python = ">=3.8"
+readme = "README.md"
