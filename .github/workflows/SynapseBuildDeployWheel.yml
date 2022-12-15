@@ -7,12 +7,12 @@ on:
         required: true 
         type: boolean
         default: true 
-        description: deploy wheel to a Synapse workspace. 
+        description: deploy wheel to a Synapse workspace 1. 
       deploy-to-synapse-ws-2:
         required: true 
         type: boolean 
         default: false 
-        description: deploy wheel to a Synapse Workspace. 
+        description: deploy wheel to a Synapse Workspace 2. 
         # can add other Synapse workspaces here
 
 jobs:
