@@ -19,7 +19,7 @@ def main():
         return result 
 
     get_spark_pool_info = f'''$spark_pool_info = Get-AzSynapseSparkPool -WorkspaceName "{SYNAPSE_WS}" -Name "{SPARK_POOL_NAME}";
-                               $pool_packages = $spark_pool_info.WorkspacePackages.Name;
+                               $pool_packages = ($spark_pool_info.WorkspacePackages).Name;
                             '''
 
     get_workspace_packages = f'Get-AzSynapseWorkspacePackage -WorkspaceName "{SYNAPSE_WS}"'
